@@ -10,7 +10,10 @@ class Student:
         if isinstance(lecture, Lecturer) and course in self.courses_in_progress and course in lecture.courses_attached:
             if course in lecture.grades:
                 lecture.grades[course] += [grade]
-            else: lecture.grades[course] = [grade]
+                return (f'Оценка {grade} добавлена к лекции {course}')
+            else:
+                lecture.grades[course] = [grade]
+            return (f'Оценка {grade} добавлена к лекции {course}')
         else:
             return 'Ошибка'
 
@@ -50,6 +53,7 @@ class Reviewer(Mentor):
                 student.grades[course] += [grade]
             else:
                 student.grades[course] = [grade]
+            return (f'Оценка {grade} добавлена к лекции {course}')
         else:
             return 'Ошибка'
 
@@ -72,6 +76,16 @@ class Lecturer(Mentor):
         avr = self.average_grade()
         return f'Имя: {self.name} \n Фамилия: {self.surname} \n Средняя оценка за лекции: {avr}'
 
+    def __gt__(self, other):
+        if isinstance(other, (Lecturer, Student)):
+            return self.average_grade() > other.average_grade()
+        return NotImplemented
+
+    def __le__(self, other):
+        if isinstance(other, (Lecturer, Student)):
+            return self.average_grade() <= other.average_grade()
+        return NotImplemented
+
 def average_grade_all_students(students,course):
     all_course = []
     for student in students:
@@ -88,15 +102,11 @@ def average_grade_all_lecturers(lecturers,course):
 
 
 
-
-
-
-
-
-
 some_reviewer_1 = Reviewer('Some', 'Buddy')
 some_reviewer_2 = Reviewer('Alex', 'Oushen')
 some_reviewer_1.courses_attached = ['Python', 'Git']
+some_reviewer_2.courses_attached = ['1C', 'C++']
+
 
 some_lecturer_1 = Lecturer('Some', 'Buddy')
 some_lecturer_2 = Lecturer('Anna', 'Petter')
@@ -115,18 +125,31 @@ some_student_1.courses_in_progress = 'Python', 'Git'
 some_student_1.finished_courses = 'Введение в программирование'
 some_student_1.grades = {'Python': [10,10,10,10,10,10], 'Git': [9,10,10,10]}
 some_student_2.courses_in_progress = ['Python']
-some_student_2.finished_courses = []
+some_student_2.finished_courses = ['Тестирование с 0']
 some_student_2.grades = {'Python': [8, 9, 7]}
+rate1 = some_student_1.rate_lecture(some_lecturer_1, 'Python', 10)
+rate2 = some_student_2.rate_lecture(some_lecturer_2, 'C++', 9)
+hw1 = some_reviewer_1.rate_hw(some_student_1, 'Python', 10)
+hw2 = some_reviewer_2.rate_hw(some_student_2, '1С', 10)
 
 print(some_student_1 > some_lecturer_1)
+print(some_lecturer_1 > some_lecturer_2)
 
 print(average_grade_all_students(students,'Python'))
 print(average_grade_all_lecturers(lecturers,'Python'))
 
 
 
-#print(some_reviewer_1)
-#print(some_reviewer_2)
-#print(some_lecturer_1)
-#print(some_lecturer_2)
-#print(some_student_1)
+print(some_reviewer_1)
+print(some_reviewer_2)
+print(some_lecturer_1)
+print(some_lecturer_2)
+print(some_student_1)
+print(some_student_2)
+print(hw1)
+print(hw2)
+print(rate1)
+print(rate2)
+
+
+

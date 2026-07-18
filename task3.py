@@ -71,6 +71,17 @@ class Lecturer(Mentor):
     def __str__(self):
         avr = self.average_grade()
         return f'Имя: {self.name} \n Фамилия: {self.surname} \n Средняя оценка за лекции: {avr}'
+    
+     def __gt__(self, other):
+        if isinstance(other, (Lecturer, Student)):
+            return self.average_grade() > other.average_grade()
+        return NotImplemented
+
+    def __le__(self, other):
+        if isinstance(other, (Lecturer, Student)):
+            return self.average_grade() <= other.average_grade()
+        return NotImplemented
+
 
 
 
